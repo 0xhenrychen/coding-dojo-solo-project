@@ -1,0 +1,5 @@
+- Stylize all of pages.
+
+- Format time of the class to AM/PM.
+
+- Check routes are protected for trainers, trainees, and non-logged-in users.

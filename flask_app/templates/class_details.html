@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Beast Mode Gyms - Trainer | Details Of Your Class</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            margin: 20px 20px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        form {
+            padding: 10px;
+            
+        }
+        
+        label {
+            margin: 5px;
+        }
+        
+        input[type=submit] {
+            padding: 5px 20px;
+            background-color: burlywood;
+            color: black;
+            border-radius: 10px;
+            border: 0px;
+        }
+        
+        #body_login_page {
+            margin-top: 20px;
+            background-color: burlywood;
+            background-image: url("background_login.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: aliceblue;
+        }
+        
+        #body_classes_dashboard_page {
+            margin-top: 20px;
+            background-color: burlywood;
+            background-image: url("background_classes_dashboard.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: aliceblue;
+        }
+        
+        #body_class_create_page {
+            margin-top: 20px;
+            background-color: burlywood;
+            background-image: url("background_class_create.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: aliceblue;
+        }
+
+        #body_class_edit_page {
+            margin-top: 20px;
+            background-color: burlywood;
+            background-image: url("background_class_edit.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: aliceblue;
+        }
+        
+        h1, #h3_login, p {
+            text-align: center;
+        }
+        
+        #h3_login {
+            background-color: white;
+            padding: 10px;
+            color: black;
+            border-radius: 8px;
+        }
+        
+        #p_login_validation {
+            background-color: red;
+            margin: -2px;
+            color: white;
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #unauthorized_user_p {
+            background-color: red;
+            color: white;
+            width: 500px;
+            padding: 20px;
+            margin: 200px auto;
+        }
+        
+        #body_classes_dashboard_page a, #body_class_create_page a, #body_class_edit_page a #body_class_trainees_page a, #body_class_details_page a {
+            color: black;
+        }
+        
+        #body_classes_dashboard_page a:hover, #body_class_create_page a:hover, #body_class_edit_page a:hover, #body_class_trainees_page a:hover, #body_class_details_page a:hover {
+            color: black;
+            text-decoration: underline;
+        }
+        
+        #create_class_form label, #edit_class_form label, #create_class_comment_form  label {
+            color: black;
+        }
+        
+        .container_login {
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 50px;
+        }
+        
+        .container_header {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .container_table {
+            width: auto;
+            margin: 20px 0 20px 0;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .form_width {
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #container_comment_self {
+            background-color: darksalmon;
+        }
+
+        #container_comment_trainer {
+            background-color: bisque;
+        }
+
+        #comment_author_span {
+            font-weight: bold;
+        }
+
+        #comment_content_span {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body id="body_class_details_page">
+    <div>
+        <div class="container_header">
+            <div>
+                <h2>Hey, {{ session["first_name"] }}!</h2>
+                <h4>View All Students and Leave a Comment for this Class:</h4>
+            </div>
+            <div>
+                <p>[<a href="/classes/dashboard">Home</a>] | [<a href="/logout">Log Out</a>]</p>
+            </div>
+        </div>
+        <div>
+            <p>Name: {{ this_class.class_name }}</p>
+            <p>Location: {{ this_class.class_location }}</p>
+            <p>Date: {{ this_class.class_date.strftime('%a | %b %dth, %Y') }}</p>
+            <p>Time: {{ this_class.class_time }}</p>
+        </div>
+        <div class="container_table">
+            <h4>All Students</h4>
+            <table class="table table-light">
+                <thead>
+                    <tr class="table-warning">
+                        <th scope="col">Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainee in all_trainees %}
+                        <tr>
+                            <td>{{ trainee.first_name }} {{ trainee.last_name }}</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <form action="/create_class_comment_form/{{this_class.id}}/details" method="POST" id="create_class_comment_form">
+                <div class="form-group row form_width">
+                    <div>
+                        <label for="class_comment">Leave a comment:</label>
+                        <textarea type="text" name="class_comment" cols="10" rows="3" class="form-control form-control-sm"></textarea>
+                    </div>
+                    <p></p>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <div>
+            <div class="container_comments">
+                <h4>Comments</h4>
+                {% for comment in all_comments %}
+                    {% if comment.commentor.id == session["user_id"] %}
+                        <div id="container_comment_self">
+                            <span id="comment_author_span">You</span> said "<span id="comment_content_span">{{ comment.class_comment }}</span>" on {{ comment.created_at.strftime('%a, %b %dth at %-I:%M %p') }} [<a href="/comment/delete/{{ this_class.id }}/{{ comment.id }}">Delete</a>]
+                        </div>
+                    {% elif comment.commentor.trainer == "trainer_yes" %}
+                        <div id="container_comment_trainer">
+                            <span id="comment_author_span">Coach {{ comment.commentor.first_name }}</span> said "{{ comment.class_comment }}" on {{ comment.created_at.strftime('%a, %b %dth at %-I:%M %p') }}
+                        </div>
+                    {% elif comment.commentor.trainer == "trainer_no" and comment.commentor.id == session["user_id"] %}
+                        <div id="container_comment_trainee">
+                            <span id="comment_author_span">{{ comment.commentor.first_name }}</span> 111said "{{ comment.class_comment }}" on {{ comment.created_at.strftime('%a, %b %dth at %-I:%M %p') }} [<a href="/comment/delete/{{ this_class.id }}/{{ comment.id }}">Delete</a>]
+                        </div>
+                    {% elif comment.commentor.trainer == "trainer_no" and session["is_trainer"] == "trainer_yes" %}
+                        <div id="container_comment_trainee">
+                            <span id="comment_author_span">{{ comment.commentor.first_name }}</span> 111said "{{ comment.class_comment }}" on {{ comment.created_at.strftime('%a, %b %dth at %-I:%M %p') }} [<a href="/comment/delete/{{ this_class.id }}/{{ comment.id }}">Delete</a>]
+                        </div>
+                    {% else %}
+                        <div id="container_comment_trainee">
+                            <span id="comment_author_span">{{ comment.commentor.first_name }}</span> 222said "{{ comment.class_comment }}" on {{ comment.created_at.strftime('%a, %b %dth at %-I:%M %p') }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>    
+        </div>
+    </div>
+</body>
+</html>
